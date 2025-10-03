@@ -13,6 +13,42 @@ def initialize_file():
 
             print(f"Initialized {FILENAME} successfully.")
 
+def add_expense():
+    while True:
+        print("\nSelect a category:")
+        for i, cat in enumerate(CATEGORIES, 1):
+            print(f"{i}. {cat}")
+        try:
+            cat_choice = int(input("Enter your choice: "))
+            if 1 <= cat_choice <= len(CATEGORIES):
+                category = CATEGORIES[cat_choice - 1]
+                break
+            else:
+                print("Enter a number between 1-5.")
+        except ValueError:
+            print("Enter a number.")
+    
+    description = input("Enter a description: ")
+
+    while True:
+        try:
+            amount = float(input("Enter amount: "))
+            if amount < 0:
+                print("Amount cannot be negative.")
+            else:
+                break
+        except ValueError:
+            print("Enter a number.")
+    
+    date = datetime.now().strftime("%d-%m-%Y")
+
+    with open(FILENAME, 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([date, category, description, f"{amount:.2f}"])
+
+        print("Expense added successfully.")
+
+
 def main():
     initialize_file()
     while True:
@@ -26,7 +62,7 @@ def main():
 
         try:
             if choice == '1':
-                pass
+                add_expense()
             elif choice == '2':
                 pass
             elif choice == '3':
