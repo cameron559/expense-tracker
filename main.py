@@ -56,6 +56,10 @@ def view_expenses():
     with open(FILENAME, 'r') as f:
         reader = csv.reader(f)
         rows = list(reader)
+    
+    if len(rows) <=1:
+        print("No expenses to show. Start by adding some.")
+        return
 
     col_widths = [20, 15, 30, 10]
 
@@ -68,6 +72,27 @@ def view_expenses():
     # Expenses
     for row in rows[1:]:
         print("{:<20} {:<15} {:<30} {:>10}".format(row[0], row[1], row[2], row[3]))
+
+def report_summary():
+    if not os.path.exists(FILENAME):
+        print("No expenses to show. Start by adding some.")
+        return
+    
+    summary = {cat: 0 for cat in CATEGORIES}
+
+    with open(FILENAME, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            try:
+                summary[row['Category']] += float(row["Amount"])
+            except ValueError:
+                continue
+    
+    for category, total in summary.items():
+        print(f"{category}: £{total:.2f}")
+
+    grand_total = sum(summary.values())
+    print(f"Total expenses: £{grand_total:.2f}")
 
 
 def main():
@@ -87,7 +112,7 @@ def main():
             elif choice == '2':
                 view_expenses()
             elif choice == '3':
-                pass
+                report_summary()
             elif choice == '4':
                 print("Exiting program...")
                 break
