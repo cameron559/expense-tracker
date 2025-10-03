@@ -48,6 +48,27 @@ def add_expense():
 
         print("Expense added successfully.")
 
+def view_expenses():
+    if not os.path.exists(FILENAME):
+        print("No expenses to show. Start by adding some.")
+        return
+    
+    with open(FILENAME, 'r') as f:
+        reader = csv.reader(f)
+        rows = list(reader)
+
+    col_widths = [20, 15, 30, 10]
+
+    # Header
+    header = rows[0]
+    print("\nExpenses:")
+    print("{:<20} {:<15} {:<30} {:>10}".format(*header))
+    print("-" * sum(col_widths))
+
+    # Expenses
+    for row in rows[1:]:
+        print("{:<20} {:<15} {:<30} {:>10}".format(row[0], row[1], row[2], row[3]))
+
 
 def main():
     initialize_file()
@@ -64,7 +85,7 @@ def main():
             if choice == '1':
                 add_expense()
             elif choice == '2':
-                pass
+                view_expenses()
             elif choice == '3':
                 pass
             elif choice == '4':
